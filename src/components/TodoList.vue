@@ -1,7 +1,7 @@
 <template>
     <div v-if="!todos.length">Todo List Done</div>
     <div class="card mt-2" v-for="(todo, index) in todos" :key="todo.id">
-        <div class="card-body p-2 d-flex align-items-center" @click="moveToPage(todo.id)">
+        <div class="card-body p-2 d-flex align-items-center" @click="moveToDetail(todo.id)">
             <div class="form-check flex-grow-1">
                 
                 <input 
@@ -39,8 +39,7 @@ export default {
         const deleteTodo = (index) => {
             emit('delete-todo', index)
         }
-        const moveToPage = (todoId) => {
-            console.log(todoId);
+        const moveToDetail = (todoId) => {
             //router.push('/todos/' + todoId);
             router.push({
                 name: 'Todo',
@@ -52,7 +51,7 @@ export default {
         return {
             toggleTodo,
             deleteTodo,
-            moveToPage,
+            moveToDetail,
         }
 
     }

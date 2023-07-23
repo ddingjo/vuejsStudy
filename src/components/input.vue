@@ -30,6 +30,10 @@ export default {
         const onInput = (e) => {
             emit('update:subject', e.target.value);
         }
+
+        return {
+            onInput
+        }
     }
 }
 </script>

@@ -5,11 +5,22 @@
     <form v-else @submit.prevent="onSave">
         <div class="row">
             <div class="col-6">
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label>Subject</label>
                     <input type="text" class="form-control" v-model="todo.subject">
                     <div v-if="subjectErrMsg" style="color:red"> {{ subjectErrMsg }}</div>
-                </div>
+                </div> -->
+                <!-- <Input 
+                    label="Subject" 
+                    :error="subjectErrMsg" 
+                    :subject="todo.subject" 
+                    @update-subject="updateSubject"
+                /> -->
+                <Input 
+                    label="Subject" 
+                    v-model:subject="todo.subject"
+                    :error="subjectErrMsg" 
+                />
             </div>
             <div v-if="editing" class="col-6">
                 <div class="form-group">
@@ -62,10 +73,12 @@ import { ref, computed } from 'vue'
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue'
 import {useToast} from '@/composables/toast'
+import Input from '@/components/Input.vue'
 
 export default {
     components: {
-        Toast
+        Toast,
+        Input
     },
     props: {
         editing: {
@@ -92,7 +105,7 @@ export default {
             isShowToast,
             triggerToast, 
         } = useToast();
-
+        
         const todoUpdated = computed(() => {
             return _.isEqual(todo.value, originalTodo.value)
         })
@@ -162,7 +175,7 @@ export default {
             isShowToast,
             toastMessage,
             toastAlertType,
-            subjectErrMsg
+            subjectErrMsg,
         }
     }
 }

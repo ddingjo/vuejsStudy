@@ -39,7 +39,7 @@
   <script>
   import { ref, computed, watch } from 'vue'
   import TodoList from '@/components/TodoList.vue'
-  import axios from 'axios';
+  import axios from '@/axios';
   
   export default {
     components: {

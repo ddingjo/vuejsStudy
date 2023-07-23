@@ -18,7 +18,10 @@
             <div><button class="btn btn-danger btn-sm" @click.stop="openModal(todo.id)">Del</button></div>
         </div>
     </div>
-    <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo" />
+    
+    <teleport to="#modal">
+        <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo" />
+    </teleport>
 </template>
 <script>
 //import router from '../router'

@@ -1,35 +1,27 @@
 export default {
         namespaced: true,
         state: {
-            toastMessage: '',
-            toastAlertType: '',
-            isShowToast: false,
+            toasts: [],
         },
         mutations: {
-            UPDATE_TOAST_MESSAGE(state, payload) {
-                state.toastMessage = payload;
+            ADD_TOAST(state, payload){
+                state.toasts.push(payload)
             },
-            UPDATE_TOAST_ALERT_TYPE(state, payload) {
-                state.toastAlertType = payload;
-            },
-            UPDATE_TOAST_STATUS(state, payload) {
-                state.isShowToast = payload;
-            },
-            UPDATE_TOAST_TIMEOUT(state, payload) {
-                state.timeout = payload;
+            REMOVE_TOAST(state) {
+                state.toasts.shift();
             }
         },
         actions: {
             triggerToast(context, message, type = 'success') {
-                context.commit('UPDATE_TOAST_MESSAGE', message);
-                context.commit('UPDATE_TOAST_ALERT_TYPE', type);
-                context.commit('UPDATE_TOAST_STATUS', true);
+                context.commit('ADD_TOAST', {
+                    id: Date.now(),
+                    message,
+                    type
+                })
 
                 setTimeout(() => {
-                    context.commit('UPDATE_TOAST_MESSAGE', '');
-                    context.commit('UPDATE_TOAST_ALERT_TYPE', '');
-                    context.commit('UPDATE_TOAST_STATUS', false);
-                }, 3000)
+                    context.commit('REMOVE_TOAST')
+                }, 11000)
             }
         },
         getters: {

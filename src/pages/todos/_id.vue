@@ -42,20 +42,38 @@
         </button>
         <button type="reset" class="btn btn-outline-dark ml-2" @click="moveTodoList">List</button>
     </form>
+    <Toast v-if="isShowToast" :message="toastMessage" :type="toastAlertType"/>
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios'
 import { ref, computed } from 'vue'
 import _ from 'lodash';
-
+import Toast from '@/components/Toast.vue'
 export default {
+    components: {
+        Toast
+    },
     setup() {
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
         const originalTodo = ref(null);
         const isLoading = ref(true);
+        const isShowToast = ref(false)
+        const toastMessage = ref('')
+        const toastAlertType = ref('')
+
+        const tiggerToast = (message, type = 'success') => {
+            toastAlertType.value = type;
+            toastMessage.value = message;
+            isShowToast.value  = true;
+            setTimeout(() => {
+                toastMessage.value = '';
+                toastAlertType.value = '';
+                isShowToast.value  = false;
+            }, 3000)
+        }
 
         const todoUpdated = computed(() => {
             return _.isEqual(todo.value, originalTodo.value)
@@ -69,14 +87,19 @@ export default {
             })
         }
         const getTodo = async () => {
-            const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
-            todo.value = {...res.data}; // 스프레드 오퍼레이터
-            originalTodo.value = {...res.data};
-            isLoading.value = false;
+            try{
+                const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
+                todo.value = {...res.data}; // 스프레드 오퍼레이터
+                originalTodo.value = {...res.data};
+                isLoading.value = false;
+            }catch(err){
+                tiggerToast(err, danger);
+            }
         }
 
         getTodo();
 
+        
         const onSave = async () => {
             const id = route.params.id;
             try {
@@ -84,10 +107,11 @@ export default {
                     completed: todo.value.completed,
                     subject: todo.value.subject
                 })
-                todo.value = {...res.data}; // 스프레드 오퍼레이터
-                originalTodo.value = {...res.data};
+                //todo.value = res.data;
+                originalTodo.value = {...res.data}; // 스프레드 오퍼레이터 
+                tiggerToast('Successfully saved!');
             } catch (err) {
-                err.value = "deleteTodo: " + err;
+                tiggerToast("onSave: " + err, danger);
             }
         }
 
@@ -98,6 +122,9 @@ export default {
             toggleTodoStatus,
             moveTodoList,
             todoUpdated,
+            isShowToast,
+            toastMessage,
+            toastAlertType,
         }
     }
 

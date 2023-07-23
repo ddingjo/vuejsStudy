@@ -5,7 +5,7 @@
     <hr />
     <TodoSimpleForm @add-todo="addTodo" />
     <div style="color:red">{{ error }}</div>
-    <TodoList :todos="filteredTodos" @toggle-todo="togglTodo" @delete-todo="deleteTodo" />
+    <TodoList :todos="todos" @toggle-todo="togglTodo" @delete-todo="deleteTodo" />
     <hr />
     <nav aria-label="Page navigation example">
       <ul class="pagination">
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import TodoSimpleForm from './components/TodoSimpleForm.vue'
 import TodoList from './components/TodoList.vue'
 import axios from 'axios';
@@ -48,10 +48,12 @@ export default {
 
     const numberOfPages = computed(() => Math.ceil(numOfTodos.value / limit))
 
+    
+
     const getTodos = async (page = currentPage.value) => {
       currentPage.value = page;
       try {
-        const res = await axios.get(`http://localhost:3000/todos?_page=${page}&_limit=${limit}`);
+        const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);
         numOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
       } catch (err) {
@@ -64,10 +66,11 @@ export default {
       // 데이터베이스 투두 저장
       error.value = '';
       try {
-        const res = await axios.post('http://localhost:3000/todos', {
+        await axios.post('http://localhost:3000/todos', {
           subject: todo.subject, completed: todo.completed
         });
-        todos.value.push(res.data);
+        getTodos(1);
+        //todos.value.push(res.data);
       } catch (err) {
         error.value = "addTodo: " + err;
       }
@@ -78,7 +81,8 @@ export default {
       const id = todos.value[index].id;
       try {
         await axios.delete(`http://localhost:3000/todos/${id}`);
-        todos.value.splice(index, 1)
+        getTodos(currentPage.value);
+        //todos.value.splice(index, 1)
       } catch (err) {
         error.value = "deleteTodo: " + err;
       }
@@ -100,19 +104,14 @@ export default {
 
     }
 
-    const filteredTodos = computed(() => {
-      if (searchText.value) {
-        return todos.value.filter(todo => {
-          return todo.subject.includes(searchText.value);
-        });
-      }
-
-      return todos.value;
+    watch(searchText, () => {
+      getTodos(1);
+      
     })
+    
     return {
       todos,
       searchText,
-      filteredTodos,
       error,
       numberOfPages,
       currentPage,

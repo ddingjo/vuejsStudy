@@ -1,6 +1,10 @@
 <template>
     <div>
-      <h2>To-Do List</h2>
+        <div class="d-flex justify-content-between my-3">
+            <h2>To-Do List</h2>
+            <router-link :to="{name : 'TodoCreate'}" class="btn btn-primary">Create Todo</router-link>
+        </div>
+      
       <input 
         class="form-control" 
         type="text" 

@@ -33,22 +33,33 @@
                 </div>        
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button 
+            type="submit" 
+            class="btn btn-primary"
+            :disabled="todoUpdated"
+        >
+            Save
+        </button>
         <button type="reset" class="btn btn-outline-dark ml-2" @click="moveTodoList">List</button>
     </form>
 </template>
 <script>
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import _ from 'lodash';
 
 export default {
     setup() {
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
-
+        const originalTodo = ref(null);
         const isLoading = ref(true);
+
+        const todoUpdated = computed(() => {
+            return _.isEqual(todo.value, originalTodo.value)
+        })
         const toggleTodoStatus = () => {
             todo.value.completed = !todo.value.completed;
         }
@@ -59,7 +70,8 @@ export default {
         }
         const getTodo = async () => {
             const res = await axios.get(`http://localhost:3000/todos/${route.params.id}`)
-            todo.value = res.data;
+            todo.value = {...res.data}; // 스프레드 오퍼레이터
+            originalTodo.value = {...res.data};
             isLoading.value = false;
         }
 
@@ -72,7 +84,8 @@ export default {
                     completed: todo.value.completed,
                     subject: todo.value.subject
                 })
-                todo.value = res.data;
+                todo.value = {...res.data}; // 스프레드 오퍼레이터
+                originalTodo.value = {...res.data};
             } catch (err) {
                 err.value = "deleteTodo: " + err;
             }
@@ -84,6 +97,7 @@ export default {
             onSave,
             toggleTodoStatus,
             moveTodoList,
+            todoUpdated,
         }
     }
 

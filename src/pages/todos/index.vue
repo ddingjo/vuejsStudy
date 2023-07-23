@@ -33,6 +33,11 @@
           </li>
         </ul>
       </nav>
+      <!-- <Pagination 
+        :numberOfPages="numberOfPages"
+        :currentPage="currentPage"
+        @click="getTodos"
+      /> -->
     </div>
   </template>
   
@@ -40,10 +45,12 @@
   import { ref, computed, watch } from 'vue'
   import TodoList from '@/components/TodoList.vue'
   import axios from '@/axios';
-  
+  import Pagination from '@/components/Pagination.vue'
+
   export default {
     components: {
       TodoList,
+      Pagination
     },
     setup() {
       const todos = ref([])
@@ -58,6 +65,7 @@
       
   
       const getTodos = async (page = currentPage.value) => {
+        console.log(page);
         currentPage.value = page;
         try {
           const res = await axios.get(`todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`);

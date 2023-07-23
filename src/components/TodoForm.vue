@@ -61,9 +61,6 @@
         </button>
         <button type="reset" class="btn btn-outline-dark ml-2" @click="moveTodoList">List</button>
     </form>
-    <transition name="slide">
-        <Toast v-if="isShowToast" :message="toastMessage" :type="toastAlertType"/>
-    </transition>
     
 </template>
 <script>
@@ -71,13 +68,11 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from '@/axios'
 import { ref, computed } from 'vue'
 import _ from 'lodash';
-import Toast from '@/components/Toast.vue'
 import {useToast} from '@/composables/toast'
 import Input from '@/components/Input.vue'
 
 export default {
     components: {
-        Toast,
         Input
     },
     props: {
@@ -184,35 +179,4 @@ export default {
     }
 }
 </script>
-<style scoped>
-    .slide-enter-active,
-    .slide-leave-active{
-        transition: all 0.5s ease;
-    }
-
-    .slide-enter-from,
-    .slide-leave-to {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    .slide-enter-to,
-    .slide-leave-from {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-    /* .fade-enter-active,
-    .fade-leave-active{
-        transition: opacity 0.5s ease;
-    }
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-    }
-
-    .fade-enter-to,
-    .fade-leave-from {
-        opacity: 1;
-    } */
-</style>
+<style scoped></style>

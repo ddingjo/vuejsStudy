@@ -1,20 +1,19 @@
 <template>
     <div v-if="!todos.length">Todo List Done</div>
     <div class="card mt-2" v-for="(todo, index) in todos" :key="todo.id">
-        <div class="card-body p-2 d-flex align-items-center" @click="moveToDetail(todo.id)">
-            <div class="form-check flex-grow-1">
-                
+        <div class="card-body p-2 d-flex align-items-center" style="cursor: pointer" @click="moveToDetail(todo.id)">
+            <div class="flex-grow-1">
                 <input 
-                    class="form-check-input" 
+                    class="mx-2"
                     type="checkbox" 
                     v-bind:checked="todo.completed"
                     @change="toggleTodo(index, $event)"
                     @click.stop
                 >
                 <!-- <label class="form-check-label" for="" :style="todo.complated ? todoStyle : {}"> -->
-                <label for="" class="form-check-label " :class="{ todo: todo.completed }">
+                <span :class="{ todo: todo.completed }">
                     {{ todo.subject }}
-                </label>
+                </span>
             </div>
             <div><button class="btn btn-danger btn-sm" @click.stop="deleteTodo(index)">Del</button></div>
         </div>

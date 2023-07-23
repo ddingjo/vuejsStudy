@@ -167,15 +167,18 @@
     },
     {
       "subject": "yrdyrdyrdy",
-      "id": 34
+      "id": 34,
+      "completed": false
     },
     {
       "subject": "123123",
-      "id": 35
+      "id": 35,
+      "completed": false
     },
     {
       "subject": "move",
-      "id": 36
+      "id": 36,
+      "completed": false
     }
   ]
 }

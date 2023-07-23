@@ -8,14 +8,15 @@
                     class="form-check-input" 
                     type="checkbox" 
                     v-bind:checked="todo.completed"
-                    @change="toggleTodo(index)"
+                    @change="toggleTodo(index, $event)"
+                    @click.stop
                 >
                 <!-- <label class="form-check-label" for="" :style="todo.complated ? todoStyle : {}"> -->
                 <label for="" class="form-check-label " :class="{ todo: todo.completed }">
                     {{ todo.subject }}
                 </label>
             </div>
-            <div><button class="btn btn-danger btn-sm" @click="deleteTodo(index)">Del</button></div>
+            <div><button class="btn btn-danger btn-sm" @click.stop="deleteTodo(index)">Del</button></div>
         </div>
     </div>
 </template>
@@ -32,8 +33,8 @@ export default {
     emits: ['toggle-todo', 'delete-todo'],
     setup(props, {emit}){
         const router = useRouter();
-        const toggleTodo = (index) => {
-            emit('toggle-todo', index)
+        const toggleTodo = (index, event) => {
+            emit('toggle-todo', index, event.target.checked)
         }
         const deleteTodo = (index) => {
             emit('delete-todo', index)

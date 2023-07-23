@@ -95,15 +95,15 @@
         }
   
       }
-      const togglTodo = async (index) => {
+      const togglTodo = async (index, checked) => {
         error.value = '';
         const id = todos.value[index].id;
         try {
           const res = await axios.patch(`http://localhost:3000/todos/${id}`, {
-            completed: !todos.value[index].completed
+            completed: checked
           })
           // console.log(res);
-          todos.value[index].completed = !todos.value[index].completed;
+          todos.value[index].completed = checked;
   
         } catch (err) {
           error.value = "deleteTodo: " + err;

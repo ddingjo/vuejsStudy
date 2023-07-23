@@ -12,11 +12,12 @@ export default {
             }
         },
         actions: {
-            triggerToast(context, message, type = 'success') {
+            triggerToast(context, payload) {
+                // message, type = 'success'
                 context.commit('ADD_TOAST', {
                     id: Date.now(),
-                    message,
-                    type
+                    message: payload.message,
+                    type: payload.type
                 })
 
                 setTimeout(() => {

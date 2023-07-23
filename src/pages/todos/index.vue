@@ -13,7 +13,6 @@
         @keyup.enter="searchInput"
       >
       <hr />
-      <TodoSimpleForm @add-todo="addTodo" />
       <div style="color:red">{{ error }}</div>
       <TodoList :todos="todos" @toggle-todo="togglTodo" @delete-todo="deleteTodo" />
       <hr />
@@ -39,13 +38,11 @@
   
   <script>
   import { ref, computed, watch } from 'vue'
-  import TodoSimpleForm from '@/components/TodoSimpleForm.vue'
   import TodoList from '@/components/TodoList.vue'
   import axios from 'axios';
   
   export default {
     components: {
-      TodoSimpleForm,
       TodoList,
     },
     setup() {

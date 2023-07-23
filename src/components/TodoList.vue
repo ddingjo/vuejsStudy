@@ -15,14 +15,20 @@
                     {{ todo.subject }}
                 </span>
             </div>
-            <div><button class="btn btn-danger btn-sm" @click.stop="deleteTodo(index)">Del</button></div>
+            <div><button class="btn btn-danger btn-sm" @click.stop="openModal(todo.id)">Del</button></div>
         </div>
     </div>
+    <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo" />
 </template>
 <script>
-import router from '../router'
+//import router from '../router'
 import { useRouter} from 'vue-router'
+import Modal from '@/components/Modal.vue'
+import {ref} from 'vue';
 export default {
+    components: {
+        Modal
+    },
     props: {
         todos: {
             type: Array,
@@ -32,11 +38,23 @@ export default {
     emits: ['toggle-todo', 'delete-todo'],
     setup(props, {emit}){
         const router = useRouter();
+        const showModal = ref(false);
+        const todoDeleteId = ref(null);
         const toggleTodo = (index, event) => {
             emit('toggle-todo', index, event.target.checked)
         }
-        const deleteTodo = (index) => {
-            emit('delete-todo', index)
+        const closeModal = () => {
+            showModal.value = false;
+            todoDeleteId.value = null;
+        }
+        const openModal = (id) => {
+            todoDeleteId.value = id;
+            showModal.value = true;
+        }
+        const deleteTodo = () => {
+            emit('delete-todo', todoDeleteId.value);
+            showModal.value = false;
+            todoDeleteId.value = null;
         }
         const moveToDetail = (todoId) => {
             //router.push('/todos/' + todoId);
@@ -51,6 +69,9 @@ export default {
             toggleTodo,
             deleteTodo,
             moveToDetail,
+            openModal,
+            closeModal,
+            showModal,
         }
 
     }

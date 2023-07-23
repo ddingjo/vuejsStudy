@@ -50,6 +50,8 @@ import axios from 'axios'
 import { ref, computed } from 'vue'
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue'
+import {useToast} from '@/composables/toast'
+
 export default {
     components: {
         Toast
@@ -60,20 +62,14 @@ export default {
         const todo = ref(null);
         const originalTodo = ref(null);
         const isLoading = ref(true);
-        const isShowToast = ref(false)
-        const toastMessage = ref('')
-        const toastAlertType = ref('')
-
-        const tiggerToast = (message, type = 'success') => {
-            toastAlertType.value = type;
-            toastMessage.value = message;
-            isShowToast.value  = true;
-            setTimeout(() => {
-                toastMessage.value = '';
-                toastAlertType.value = '';
-                isShowToast.value  = false;
-            }, 3000)
-        }
+        
+        
+        const {
+            toastMessage,
+            toastAlertType,
+            isShowToast,
+            triggerToast, 
+        } = useToast();
 
         const todoUpdated = computed(() => {
             return _.isEqual(todo.value, originalTodo.value)
@@ -93,7 +89,7 @@ export default {
                 originalTodo.value = {...res.data};
                 isLoading.value = false;
             }catch(err){
-                tiggerToast(err, danger);
+                triggerToast (err, danger);
             }
         }
 
@@ -109,9 +105,9 @@ export default {
                 })
                 //todo.value = res.data;
                 originalTodo.value = {...res.data}; // 스프레드 오퍼레이터 
-                tiggerToast('Successfully saved!');
+                triggerToast('Successfully saved!');
             } catch (err) {
-                tiggerToast("onSave: " + err, danger);
+                triggerToast("onSave: " + err, 'danger');
             }
         }
 
